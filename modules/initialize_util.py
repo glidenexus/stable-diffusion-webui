@@ -171,7 +171,13 @@ def configure_opts_onchange():
     from modules import shared, sd_models, sd_vae, ui_tempdir, sd_hijack
     from modules.call_queue import wrap_queued_call
 
-    shared.opts.onchange("sd_model_checkpoint", wrap_queued_call(lambda: sd_models.reload_model_weights()), call=False)
+        # Replace the callback with a dummy function that does nothing
+    def dummy_callback(*args, **kwargs):
+        pass
+
+    shared.opts.onchange("sd_model_checkpoint", wrap_queued_call(dummy_callback), call=False)
+
+    # shared.opts.onchange("sd_model_checkpoint", wrap_queued_call(lambda: sd_models.reload_model_weights()), call=False)
     shared.opts.onchange("sd_vae", wrap_queued_call(lambda: sd_vae.reload_vae_weights()), call=False)
     shared.opts.onchange("sd_vae_overrides_per_model_preferences", wrap_queued_call(lambda: sd_vae.reload_vae_weights()), call=False)
     shared.opts.onchange("temp_dir", ui_tempdir.on_tmpdir_changed)
