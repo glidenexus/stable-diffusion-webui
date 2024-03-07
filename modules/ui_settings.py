@@ -112,8 +112,8 @@ class UiSettings:
             with gr.Row():
                 with gr.Column(scale=6):
                     self.submit = gr.Button(value="Apply settings", variant='primary', elem_id="settings_submit")
-                with gr.Column():
-                    restart_gradio = gr.Button(value='Reload UI', variant='primary', elem_id="settings_restart_gradio")
+                # with gr.Column():
+                #     restart_gradio = gr.Button(value='Reload UI', variant='primary', elem_id="settings_restart_gradio")
 
             self.result = gr.HTML(elem_id="settings_result")
 
@@ -144,7 +144,7 @@ class UiSettings:
 
                         previous_section = item.section
 
-                    if k in self.quicksettings_names and not shared.cmd_opts.freeze_settings:
+                    if k in self.quicksettings_names:
                         self.quicksettings_list.append((i, k, item))
                         self.components.append(dummy_component)
                     elif section_must_be_skipped:
@@ -240,12 +240,12 @@ class UiSettings:
                 outputs=[]
             )
 
-            restart_gradio.click(
-                fn=shared.state.request_restart,
-                _js='restart_reload',
-                inputs=[],
-                outputs=[],
-            )
+            # restart_gradio.click(
+            #     fn=shared.state.request_restart,
+            #     _js='restart_reload',
+            #     inputs=[],
+            #     outputs=[],
+            # )
 
             def check_file(x):
                 if x is None:
