@@ -91,7 +91,8 @@ class Options:
 
         if self.data is not None:
             if key in self.data or key in self.data_labels:
-                assert not cmd_opts.freeze_settings, "changing settings is disabled"
+                if key != "sd_model_checkpoint":
+                    assert not cmd_opts.freeze_settings, "changing settings is disabled"
 
                 info = self.data_labels.get(key, None)
                 if info.do_not_save:
@@ -160,8 +161,9 @@ class Options:
 
         return data_label.default
 
-    def save(self, filename):
-        assert not cmd_opts.freeze_settings, "saving settings is disabled"
+    def save(self, filename,should_save=False):
+        if not should_save:
+            assert not cmd_opts.freeze_settings, "saving settings is disabled"
 
         with open(filename, "w", encoding="utf8") as file:
             json.dump(self.data, file, indent=4, ensure_ascii=False)
