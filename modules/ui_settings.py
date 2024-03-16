@@ -94,7 +94,10 @@ class UiSettings:
         if value is None or not opts.set(key, value):
             return gr.update(value=getattr(opts, key)), opts.dumpjson()
 
-        opts.save(shared.config_filename)
+        if key == "sd_model_checkpoint":
+            opts.save(shared.config_filename,True)
+        else:
+            opts.save(shared.config_filename)
 
         return get_value_for_setting(key), opts.dumpjson()
 
