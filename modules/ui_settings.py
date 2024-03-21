@@ -147,7 +147,7 @@ class UiSettings:
 
                         previous_section = item.section
 
-                    if k in self.quicksettings_names:
+                    if k in self.quicksettings_names and not shared.cmd_opts.freeze_settings:
                         self.quicksettings_list.append((i, k, item))
                         self.components.append(dummy_component)
                     elif section_must_be_skipped:
