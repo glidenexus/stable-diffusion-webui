@@ -250,6 +250,11 @@ def create_override_settings_dropdown(tabname, row):
 
     return dropdown
 
+def update_dropdown_choices():
+            choices = {"choices": shared_items.list_checkpoint_tiles(shared.opts.sd_checkpoint_dropdown_use_short)}
+            print("dropdown choices",choices)
+            return choices
+
 
 def create_ui():
     import modules.img2img
@@ -261,6 +266,13 @@ def create_ui():
 
     scripts.scripts_current = scripts.scripts_txt2img
     scripts.scripts_txt2img.initialize_scripts(is_img2img=False)
+
+    dummy_dropdown = gr.Dropdown(
+            label="Stable Diffusion checkpoint",
+            elem_id="my_dropdown",
+            value=update_dropdown_choices().get("choices", [None])[0],
+            choices=update_dropdown_choices().get("choices", [])
+        )
 
     with gr.Blocks(analytics_enabled=False) as txt2img_interface:
         toprow = ui_toprow.Toprow(is_img2img=False, is_compact=shared.opts.compact_prompt_box)
@@ -383,6 +395,7 @@ def create_ui():
                 _js="submit",
                 inputs=[
                     dummy_component,
+                    dummy_dropdown if dummy_component else None,
                     toprow.prompt,
                     toprow.negative_prompt,
                     toprow.ui_styles.dropdown,
@@ -719,6 +732,7 @@ def create_ui():
                 inputs=[
                     dummy_component,
                     dummy_component,
+                    dummy_dropdown if dummy_component else None,
                     toprow.prompt,
                     toprow.negative_prompt,
                     toprow.ui_styles.dropdown,
@@ -1110,6 +1124,19 @@ def create_ui():
         shared.tab_names.append(label)
 
     with gr.Blocks(theme=shared.gradio_theme, analytics_enabled=False, title="Stable Diffusion") as demo:
+
+        with gr.Row():
+            with gr.Column(scale=2.3):
+                dummy_dropdown.change(fn=update_dropdown_choices, inputs=[], outputs=[])
+
+                dummy_dropdown.render()
+
+            # with gr.Column():
+            #     refresh_button = gr.Button("🔄",visible=True)
+                               
+            with gr.Column(scale=7.7):
+                # This button is hidden and does not perform any action in this simplified example
+                hidden_btn = gr.Button("Hidden Button", visible=False)
         settings.add_quicksettings()
 
         parameters_copypaste.connect_paste_params_buttons()
