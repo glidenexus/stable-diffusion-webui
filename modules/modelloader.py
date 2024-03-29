@@ -8,6 +8,9 @@ from urllib.parse import urlparse
 from modules import shared
 from modules.upscaler import Upscaler, UpscalerLanczos, UpscalerNearest, UpscalerNone
 from modules.paths import script_path, models_path
+import subprocess
+model_dir = "Stable-diffusion"
+model_path = os.path.abspath(os.path.join(models_path, model_dir))
 
 
 def load_file_from_url(
@@ -30,6 +33,35 @@ def load_file_from_url(
         print(f'Downloading: "{url}" to {cached_file}\n')
         from torch.hub import download_url_to_file
         download_url_to_file(url, cached_file, progress=progress)
+    return cached_file
+
+
+def load_file_from_url_custom(
+    url: str,
+    *,
+    progress: bool = True,
+    file_name: str | None = None,
+) -> str:
+
+    """Download a file from `url` into `model_dir`, using the file present if possible.
+
+    Returns the path to the downloaded file.
+    """
+    model_dir = model_path
+    os.makedirs(model_dir, exist_ok=True)
+    if not file_name:
+        parts = urlparse(url)
+        file_name = os.path.basename(parts.path)
+    cached_file = os.path.abspath(os.path.join(model_dir, file_name))
+    if not os.path.exists(cached_file):
+        print(f'Downloading: "{url}" to {cached_file}\n')
+        subprocess.run([
+            'aria2c',
+            '-x', '16',
+            '-d', model_dir,
+            '-o', file_name,
+            url
+        ])
     return cached_file
 
 

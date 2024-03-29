@@ -29,6 +29,9 @@ import modules.shared as shared
 from modules import prompt_parser
 from modules.sd_hijack import model_hijack
 from modules.generation_parameters_copypaste import image_from_url_text
+from modules.modelloader import load_file_from_url_custom 
+from modules.shared_items import refresh_checkpoints
+from modules.checkpoint_list import checkpoint_list
 
 create_setting_component = ui_settings.create_setting_component
 
@@ -250,11 +253,19 @@ def create_override_settings_dropdown(tabname, row):
 
     return dropdown
 
-def update_dropdown_choices():
-            choices = {"choices": shared_items.list_checkpoint_tiles(shared.opts.sd_checkpoint_dropdown_use_short)}
-            print("dropdown choices",choices)
-            return choices
 
+def update_dropdown_choices():
+    choices = {"choices": list(checkpoint_list.keys())}
+    print("dropdown choices",choices)
+    return choices
+
+def on_dropdown_change(selected_name):
+    print('select name',selected_name)
+    url = checkpoint_list.get(selected_name)
+    load_file_from_url_custom(url=url,file_name=selected_name)
+    print('download completed')
+    refresh_checkpoints()
+    return selected_name
 
 def create_ui():
     import modules.img2img
@@ -1127,7 +1138,7 @@ def create_ui():
 
         with gr.Row():
             with gr.Column(scale=2.3):
-                dummy_dropdown.change(fn=update_dropdown_choices, inputs=[], outputs=[])
+                dummy_dropdown.change(fn=on_dropdown_change, inputs=[dummy_dropdown], outputs=[dummy_dropdown],show_progress=True)
 
                 dummy_dropdown.render()
 
