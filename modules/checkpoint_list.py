@@ -1,4 +1,4 @@
-fixed_checkpoint_list = {
+checkpoint_list = {
     "3dAnimationDiffusion_v10.safetensors": "https://huggingface.co/datasets/icelabs/stable-diffusion/resolve/main/3dAnimationDiffusion_v10.safetensors",
     "AnythingXL_xl.safetensors": "https://huggingface.co/datasets/icelabs/stable-diffusion/resolve/main/AnythingXL_xl.safetensors",
     "aZovyaPhotoreal_v2.safetensors": "https://huggingface.co/datasets/icelabs/stable-diffusion/resolve/main/aZovyaPhotoreal_v2.safetensors",
