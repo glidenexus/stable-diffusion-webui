@@ -31,7 +31,7 @@ from modules.sd_hijack import model_hijack
 from modules.generation_parameters_copypaste import image_from_url_text
 from modules.modelloader import load_file_from_url_custom 
 from modules.shared_items import refresh_checkpoints
-from modules.checkpoint_list import checkpoint_list
+from modules.checkpoint_list import checkpoint_list,map_checkpoint_list
 
 create_setting_component = ui_settings.create_setting_component
 
@@ -255,16 +255,18 @@ def create_override_settings_dropdown(tabname, row):
 
 
 def update_dropdown_choices():
-    choices = {"choices": list(checkpoint_list.keys())}
+    choices = {"choices": list(map_checkpoint_list.keys())}
     print("dropdown choices",choices)
     return choices
 
 def on_dropdown_change(selected_name):
     print('select name',selected_name)
-    url = checkpoint_list.get(selected_name)
-    load_file_from_url_custom(url=url,file_name=selected_name)
+    file_name = map_checkpoint_list.get(selected_name)
+    url = checkpoint_list.get(file_name)
+    load_file_from_url_custom(url=url,file_name=file_name)
     print('download completed')
     refresh_checkpoints()
+    print("refresh complete")
     return selected_name
 
 def create_ui():
