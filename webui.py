@@ -13,7 +13,7 @@ startup_timer.record("launcher")
 initialize.imports()
 
 initialize.check_versions()
-from gradio.routes import authenticate
+# from gradio.routes import authenticate
 
 def create_api(app):
     from modules.api.api import Api
@@ -83,7 +83,7 @@ def webui():
             ssl_certfile=cmd_opts.tls_certfile,
             ssl_verify=cmd_opts.disable_tls_verify,
             debug=cmd_opts.gradio_debug,
-            # auth=gradio_auth_creds,
+            auth=gradio_auth_creds,
             inbrowser=auto_launch_browser,
             prevent_thread_lock=True,
             allowed_paths=cmd_opts.gradio_allowed_path,
@@ -91,9 +91,7 @@ def webui():
                 "docs_url": "/docs",
                 "redoc_url": "/redoc",
             },
-            root_path=f"/{cmd_opts.subpath}" if cmd_opts.subpath else "",
-            auth=authenticate
-        )
+            root_path=f"/{cmd_opts.subpath}" if cmd_opts.subpath else ""        )
 
         startup_timer.record("gradio launch")
 
